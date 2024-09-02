@@ -24,6 +24,20 @@ void temposMediosGet(double *temposMedios, int qntTamanhos)
     }
 }
 
+void normalizarDados(double *vet, float escala, int n){
+    int i;
+    for(i = 0; i < n; i++){
+        vet[i] = vet[i] * escala;
+    }
+}
+
+void dadosOriginais(double *vet, float escala, int n){
+    int i;
+    for(i = 0; i < n; i++){
+        vet[i] = vet[i] / escala;
+    }
+}
+
 void geradorRandom(int *array, int seed, int qntd)
 {
     int i = 0;
@@ -131,7 +145,7 @@ void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, 
     fprintf(gnuplotPipe, "set xlabel 'Tamanho do problema'\n");
     fprintf(gnuplotPipe, "set ylabel 'Tempo medio'\n");
     fprintf(gnuplotPipe, "set grid\n");
-    // fprintf(gnuplotPipe, "f(x) = 5533*x**2-209*x + 0\n");
+    // fprintf(gnuplotPipe, "f(x) = %f*x**2+%f*x - 1\n",a,b);
     // fprintf(gnuplotPipe, "f(x) = %f*x**3 - 211*x**2 + 3998*x - 0.2\n");
     fprintf(gnuplotPipe, "f(x) = %f*x + %f\n", a, b);
     // fprintf(gnuplotPipe, "f(x) = (log(x) / log(2))\n");
