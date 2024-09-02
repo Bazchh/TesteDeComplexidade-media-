@@ -8,7 +8,7 @@ void *funcaoErroQuadratico(double a, double b, double *y, double *x, int qntPont
     double dA, dB;
     double r;
     int count = 0;
-    while (((erro - erroa) / erro) > 0.01)
+    while ((fabs(erro - erroa) / erro) > 0.01)
     {
         erroa = erro;
         erro = 0;
@@ -25,13 +25,12 @@ void *funcaoErroQuadratico(double a, double b, double *y, double *x, int qntPont
         {
             double previsao = a * x[i] + b;
             dA += (taxaDeAprendizado * ((y[i] - previsao) * (-x[i]))) / (1e-8 + r);
-            dB += (taxaDeAprendizado * ((y[i] - previsao) * (- 1))) / (1e-8 + r);
+            dB += (taxaDeAprendizado * ((y[i] - previsao) * (-1))) / (1e-8 + r);
         }
-            a -= dA;
-            b -= dB;
-        count ++;
+        a -= dA;
+        b -= dB;
+        count++;
         printf("\na = %.3f, b = %.3f, erro = %.3f\n", a, b, erro);
-        
     }
 
     printf("\n%i", count);
