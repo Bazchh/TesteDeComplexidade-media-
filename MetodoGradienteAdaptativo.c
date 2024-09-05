@@ -29,7 +29,7 @@ void primeiroGrau(double *a_e_b, double *y, double *x, int qntPontos, double tax
     double dA, dB, r;
     int count = 0;
     double theta = 1e-8;
-    while ((fabs(erro - erroa) / erro) > 0.01)
+    while ((fabs(erro - erroa) / erro) > 0.0001)
     {
         erroa = erro;
         erro = 0;
@@ -132,7 +132,7 @@ void logn(double *a_e_b, double *y, double *x, int qntPontos, double taxaDeApren
     int count = 0;
     double theta = 1e-8;
 
-    while ((fabs(erro - erroa) / erro) > 0.01)
+    do
     {
         erroa = erro;
         erro = 0.0;
@@ -155,6 +155,6 @@ void logn(double *a_e_b, double *y, double *x, int qntPontos, double taxaDeApren
 
         count++;
         printf("\na = %.3f, b = %.3f , erro = %.3f\n", a_e_b[0], a_e_b[1], erro);
-    }
+    } while ((fabs(erro - erroa) / erro) > 0.01);
     printf("\n%i", count);
 }
