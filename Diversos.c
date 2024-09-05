@@ -24,16 +24,20 @@ void temposMediosGet(double *temposMedios, int qntTamanhos)
     }
 }
 
-void normalizarDados(double *vet, float escala, int n){
+void normalizarDados(double *vet, float escala, int n)
+{
     int i;
-    for(i = 0; i < n; i++){
+    for (i = 0; i < n; i++)
+    {
         vet[i] = vet[i] * escala;
     }
 }
 
-void dadosOriginais(double *vet, float escala, int n){
+void dadosOriginais(double *vet, float escala, int n)
+{
     int i;
-    for(i = 0; i < n; i++){
+    for (i = 0; i < n; i++)
+    {
         vet[i] = vet[i] / escala;
     }
 }
@@ -116,8 +120,9 @@ void escreverEmArquivo(double *tempo, int qntTempos, int n, int i)
     free(nomeDoArquivo);
 }
 
-void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, double b, int j)
+void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, double b, double c, int j)
 {
+    // Abrir arquivo para escrita dos dados
     FILE *dados = fopen("dados.txt", "w");
     if (dados == NULL)
     {
@@ -125,13 +130,14 @@ void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, 
         return;
     }
 
+    // Escrever dados no arquivo
     for (int i = 0; i < testes; i++)
     {
-        fprintf(dados, " %f %f\n", temposMedios[i], tamanhos[i]);
+        fprintf(dados, "%f %f\n", tamanhos[i], temposMedios[i]);
     }
-
     fclose(dados);
 
+    // Abrir o pipe para o Gnuplot
     FILE *gnuplotPipe = popen("gnuplot -persist", "w");
     if (gnuplotPipe == NULL)
     {
@@ -139,19 +145,22 @@ void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, 
         return;
     }
 
+    // Configurar o Gnuplot
     fprintf(gnuplotPipe, "set terminal pngcairo enhanced size 1280,1280\n");
     fprintf(gnuplotPipe, "set output 'grafico%i.png'\n", j);
-    fprintf(gnuplotPipe, "set title 'Grafico de complexidade'\n");
+    fprintf(gnuplotPipe, "set title 'Gráfico de Complexidade'\n");
     fprintf(gnuplotPipe, "set xlabel 'Tamanho do problema'\n");
-    fprintf(gnuplotPipe, "set ylabel 'Tempo medio'\n");
+    fprintf(gnuplotPipe, "set ylabel 'Tempo médio'\n");
     fprintf(gnuplotPipe, "set grid\n");
-    // fprintf(gnuplotPipe, "f(x) = %f*x**2+%f*x - 1\n",a,b);
-    // fprintf(gnuplotPipe, "f(x) = %f*x**3 - 211*x**2 + 3998*x - 0.2\n");
+
+    // Definir a função f(x)
     fprintf(gnuplotPipe, "f(x) = %f*x + %f\n", a, b);
-    // fprintf(gnuplotPipe, "f(x) = (log(x) / log(2))\n");
+
+    // Plotar os dados e a função
     fprintf(gnuplotPipe, "plot 'dados.txt' using 1:2 title 'Pontos' with points pointtype 7 pointsize 1 lc rgb 'blue', \
          f(x) title 'O(n)' with lines lw 2 lc rgb 'green'\n");
 
+    // Fechar o pipe
     pclose(gnuplotPipe);
 }
 

@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 
-void plotGraphGNU(double *, double *, int, double , double , int);
+void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, double b, double c, int j);
 void temposMediosGet(double *, int);
 void geradorRandom(int *, int, int);
 char *porcentagemBarra(int, int, int);
