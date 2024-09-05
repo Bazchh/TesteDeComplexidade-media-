@@ -12,7 +12,7 @@ int main()
     double *tempos;
     double *tamanhos = (double *)malloc(testes * sizeof(double));
     double *temposMediosVet = (double *)malloc(testes * sizeof(double));
-    double *coeficientes_e = (double *)malloc(2 * sizeof(double));
+    double *coeficientes_e = (double *)malloc(3 * sizeof(double));
 
     verificarAlocacaoPonteiroDouble(tamanhos, "ponteiro de tamanhos");
     verificarAlocacaoPonteiroDouble(temposMediosVet, "Ponteiro com tempos medios");
@@ -26,11 +26,12 @@ int main()
     temposMediosGet(temposMediosVet, testes);
     coeficientes_e[0] = 1;
     coeficientes_e[1] = 1;
+    coeficientes_e[2] = 1;
     normalizarDados(temposMediosVet, 100, testes);
     normalizarDados(tamanhos, 0.001, testes);
-    coeficientes_e = funcaoErroQuadratico(coeficientes_e, temposMediosVet, tamanhos, testes, 0.00001);
-    /* dadosOriginais(temposMediosVet, 100, testes);
-    dadosOriginais(tamanhos, 0.001, testes); */
-    plotGraphGNU(temposMediosVet, tamanhos, testes, coeficientes_e[0], coeficientes_e[1], 1);
-    free(tempos);
+    primeiroGrau(coeficientes_e[0], coeficientes_e[1], temposMediosVet, tamanhos, testes, 0.00001);
+    dadosOriginais(temposMediosVet, 100, testes);
+    dadosOriginais(tamanhos, 0.001, testes);
+    plotGraphGNU(temposMediosVet, tamanhos, testes, coeficientes_e[0], coeficientes_e[1], coeficientes_e[2], 1);
+    // free(tempos);
 }
