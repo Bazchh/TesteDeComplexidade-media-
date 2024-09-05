@@ -153,12 +153,12 @@ void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, 
     fprintf(gnuplotPipe, "set ylabel 'Tempo médio'\n");
     fprintf(gnuplotPipe, "set grid\n");
 
-    // Definir a função f(x)
-    fprintf(gnuplotPipe, "f(x) = %f*x + %f\n", a, b);
-
+    // Definir a função f(x) - ajuste conforme a função que deseja usar
+    // Se você quer uma função logarítmica ajustada, use: f(x) = a * log(x) + b
+    fprintf(gnuplotPipe, "f(x) = %f * log(x) + %f\n", a, b);
     // Plotar os dados e a função
-    fprintf(gnuplotPipe, "plot 'dados.txt' using 1:2 title 'Pontos' with points pointtype 7 pointsize 1 lc rgb 'blue', \
-         f(x) title 'O(n)' with lines lw 2 lc rgb 'green'\n");
+    fprintf(gnuplotPipe, "plot 'dados.txt' using 1:2 title 'Dados' with points pointtype 7 pointsize 1 lc rgb 'green', \
+        f(x) title 'Ajuste Logarítmico' with lines lw 2 lc rgb 'red'\n");
 
     // Fechar o pipe
     pclose(gnuplotPipe);
