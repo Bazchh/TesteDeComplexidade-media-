@@ -29,7 +29,7 @@ int main()
     coeficientes_e[2] = 1;
     normalizarDados(temposMediosVet, 100, testes);
     normalizarDados(tamanhos, 0.001, testes);
-    primeiroGrau(coeficientes_e[0], coeficientes_e[1], temposMediosVet, tamanhos, testes, 0.00001);
+    logn(coeficientes_e, temposMediosVet, tamanhos, testes, 0.00001);
     dadosOriginais(temposMediosVet, 100, testes);
     dadosOriginais(tamanhos, 0.001, testes);
     plotGraphGNU(temposMediosVet, tamanhos, testes, coeficientes_e[0], coeficientes_e[1], coeficientes_e[2], 1);
