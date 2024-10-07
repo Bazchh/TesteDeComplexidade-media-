@@ -41,7 +41,7 @@ double *complexidadeMedia(void(func)(int *, int, int), int qntdOrdenacoes, int t
     return tempos;
 }
 
-double **MMQPrimeiroGrau(double *temposMedios, int *tamanhosN, int linhas)
+/* double **MMQPrimeiroGrau(double *temposMedios, int *tamanhosN, int linhas)
 {
     double **A = (double **)malloc(linhas * sizeof(double *));
     double **y = (double **)malloc(linhas * sizeof(double *));
@@ -281,4 +281,4 @@ double **MMQTerceiroGrau(double *temposMedios, int *tamanhosN, int linhas)
     }
     free(A);
     free(y);
-}
+} */

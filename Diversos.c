@@ -3,25 +3,63 @@
 
 void temposMediosGet(double *temposMedios, int qntTamanhos)
 {
-    char *nomeDoArquivo = (char *)malloc(20 * sizeof(char));
     FILE *arch;
     char linha[100];
-    char *linhaAlvo = "Tempo medio do algoritmo:";
+
+    // Abrir o arquivo tempos.txt
+    arch = fopen("tempos.txt", "r");
+    if (arch == NULL)
+    {
+        perror("Erro ao abrir o arquivo tempos.txt");
+        return;
+    }
+
+    // Ler os tempos e armazenar no array
     for (int i = 0; i < qntTamanhos; i++)
     {
-        sprintf(nomeDoArquivo, "Tempo%i.txt", i);
-        arch = fopen(nomeDoArquivo, "r");
-        while (fgets(linha, sizeof(linha), arch))
+        if (fgets(linha, sizeof(linha), arch) != NULL)
         {
-            if (strstr(linha, linhaAlvo))
-            {
-                char *string = strstr(linha, ":") + 1;
-                temposMedios[i] = atof(string);
-                printf("\nTempo [%i]: %f", i, temposMedios[i]);
-                break;
-            }
+            temposMedios[i] = atof(linha);  // Converter a string da linha para double
+            printf("\nTempo [%i]: %lf", i, temposMedios[i]);
+        }
+        else
+        {
+            printf("\nErro: menos dados que o esperado no arquivo.");
+            break;
         }
     }
+
+    // Fechar o arquivo após a leitura
+    fclose(arch);
+}
+
+
+void temposMediosGetw(double *temposMedios, int qntTamanhos)
+{
+    FILE *arch;
+    char linha[100];  // Buffer para armazenar a linha lida
+    arch = fopen("tempos.txt", "r");
+    
+    if (arch == NULL) {
+        printf("Erro ao abrir o arquivo!\n");
+        return;
+    }
+
+    for (int i = 0; i < qntTamanhos; i++) {
+        if (fgets(linha, sizeof(linha), arch) != NULL) {
+            // Tenta converter a linha lida em um valor double
+            if (sscanf(linha, "%f", &temposMedios[i]) != 1) {
+                //printf("Erro ao converter o valor na linha %d.\n", i + 1);
+            } else {
+              //  printf("Valor lido na linha %d: %lf\n", i + 1, temposMedios[i]);  // Debug
+            }
+        } else {
+          //  printf("Erro ao ler a linha %d.\n", i + 1);
+            break;
+        }
+    }
+
+    fclose(arch);  // Fechar o arquivo após a leitura
 }
 
 void normalizarDados(double *vet, float escala, int n)
@@ -29,7 +67,7 @@ void normalizarDados(double *vet, float escala, int n)
     int i;
     for (i = 0; i < n; i++)
     {
-        vet[i] = vet[i] * escala;
+        vet[i] = round(vet[i] * escala);
     }
 }
 
@@ -95,11 +133,15 @@ void escreverEmArquivo(double *tempo, int qntTempos, int n, int i)
 {
     double tempoMedio = 0;
     char *nomeDoArquivo = (char *)malloc((20) * sizeof(char));
+    char *nomeDoArquivo2 = (char *)malloc((20) * sizeof(char));
     sprintf(nomeDoArquivo, "Tempo%i.txt", i);
+    sprintf(nomeDoArquivo2, "tempos.txt");
     nomeDoArquivo[strcspn(nomeDoArquivo, "\n")] = '\0';
+    nomeDoArquivo2[strcspn(nomeDoArquivo2, "\n")] = '\0';
     srand(time(NULL));
     FILE *arquivoDeTempo = fopen(nomeDoArquivo, "w");
-    if (arquivoDeTempo == NULL)
+    FILE *arquivoTemposMedios = fopen(nomeDoArquivo2, "a");
+    if (arquivoDeTempo == NULL || arquivoTemposMedios == NULL)
     {
         printf("\nNão foi possivel abrir ou criar o arquivo");
         exit(EXIT_FAILURE);
@@ -115,9 +157,12 @@ void escreverEmArquivo(double *tempo, int qntTempos, int n, int i)
 
     tempoMedio /= qntTempos;
 
-    fprintf(arquivoDeTempo, "\nTempo medio do algoritmo: %f", tempoMedio);
+    fprintf(arquivoTemposMedios, "%f\n", tempoMedio);
     fclose(arquivoDeTempo);
-    free(nomeDoArquivo);
+    fclose(arquivoTemposMedios);
+    /* free(nomeDoArquivo);
+    free(arquivoTemposMedios); */
+
 }
 
 void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, double b, double c, int j)
@@ -155,7 +200,7 @@ void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, 
 
     // Definir a função f(x) - ajuste conforme a função que deseja usar
     // Se você quer uma função logarítmica ajustada, use: f(x) = a * log(x) + b
-    fprintf(gnuplotPipe, "f(x) = %f * log(x) + %f\n", a, b);
+    fprintf(gnuplotPipe, "f(x) = %f*x + %f\n", a, b);
     // Plotar os dados e a função
     fprintf(gnuplotPipe, "plot 'dados.txt' using 1:2 title 'Dados' with points pointtype 7 pointsize 1 lc rgb 'green', \
         f(x) title 'Ajuste Logarítmico' with lines lw 2 lc rgb 'red'\n");
