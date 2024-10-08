@@ -8,7 +8,7 @@ int main()
 {
     int qntdOrdenacoes = 100;
     int tamanho = 1000;
-    int testes = 100;
+    int testes = 87;
     double *tempos;
     double *tamanhos = (double *)malloc(testes * sizeof(double));
     double *temposMediosVet = (double *)malloc(testes * sizeof(double));
