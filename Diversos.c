@@ -5,61 +5,92 @@ void temposMediosGet(double *temposMedios, int qntTamanhos)
 {
     FILE *arch;
     char linha[100];
+    FILE *temp;
+    char tempo[20];
 
-    // Abrir o arquivo tempos.txt
-    arch = fopen("tempos.txt", "r");
+    arch = fopen("tempos.txt", "w");
     if (arch == NULL)
     {
         perror("Erro ao abrir o arquivo tempos.txt");
         return;
     }
 
-    // Ler os tempos e armazenar no array
-    for (int i = 0; i < qntTamanhos; i++)
+    for (int j = 0; j < qntTamanhos; j++)
     {
-        if (fgets(linha, sizeof(linha), arch) != NULL)
+        sprintf(tempo, "tempo%i.txt", j);
+        temp = fopen(tempo, "r");
+        if (temp == NULL)
         {
-            temposMedios[i] = atof(linha);  // Converter a string da linha para double
-            printf("\nTempo [%i]: %lf", i, temposMedios[i]);
+            printf("Erro ao abrir o arquivo %s\n", tempo);
+            continue;
+        }
+
+        double somaTempos = 0.0;
+        int contagemTempos = 0;
+
+        while (fgets(linha, sizeof(linha), temp) != NULL)
+        {
+            int tamanhoProblema;
+            double tempoExecucao;
+
+            
+            if (sscanf(linha, "%d %lf", &tamanhoProblema, &tempoExecucao) == 2)
+            {
+                somaTempos += tempoExecucao;  
+                contagemTempos++;
+            }
+        }
+
+        if (contagemTempos > 0)
+        {
+            double media = somaTempos / contagemTempos;
+            temposMedios[j] = media;  
+            fprintf(arch, "%lf\n", temposMedios[j]);  
         }
         else
         {
-            printf("\nErro: menos dados que o esperado no arquivo.");
-            break;
+            printf("\nErro: arquivo %s não contém dados válidos.\n", tempo);
         }
+
+        fclose(temp);
     }
 
-    // Fechar o arquivo após a leitura
     fclose(arch);
 }
-
 
 void temposMediosGetw(double *temposMedios, int qntTamanhos)
 {
     FILE *arch;
-    char linha[100];  // Buffer para armazenar a linha lida
-    arch = fopen("tempos.txt", "r");
-    
-    if (arch == NULL) {
+    char linha[100];
+    arch = fopen("tempos.txt", "w");
+
+    if (arch == NULL)
+    {
         printf("Erro ao abrir o arquivo!\n");
         return;
     }
 
-    for (int i = 0; i < qntTamanhos; i++) {
-        if (fgets(linha, sizeof(linha), arch) != NULL) {
-            // Tenta converter a linha lida em um valor double
-            if (sscanf(linha, "%f", &temposMedios[i]) != 1) {
-                //printf("Erro ao converter o valor na linha %d.\n", i + 1);
-            } else {
-              //  printf("Valor lido na linha %d: %lf\n", i + 1, temposMedios[i]);  // Debug
+    for (int i = 0; i < qntTamanhos; i++)
+    {
+        if (fgets(linha, sizeof(linha), arch) != NULL)
+        {
+            if (sscanf(linha, "%f", &temposMedios[i]) != 1)
+            {
+                // printf("Erro ao converter o valor na linha %d.\n", i + 1);
             }
-        } else {
-          //  printf("Erro ao ler a linha %d.\n", i + 1);
+            else
+            {
+                //  printf("Valor lido na linha %d: %lf\n", i + 1, temposMedios[i]);
+            }
+        }
+        else
+        {
+            //  printf("Erro ao ler a linha %d.\n", i + 1);
             break;
         }
     }
 
-    fclose(arch);  // Fechar o arquivo após a leitura
+    fclose(arch); // Fechar o arquivo após a leitura
 }
 
 void normalizarDados(double *vet, float escala, int n)
@@ -162,7 +193,6 @@ void escreverEmArquivo(double *tempo, int qntTempos, int n, int i)
     fclose(arquivoTemposMedios);
     /* free(nomeDoArquivo);
     free(arquivoTemposMedios); */
-
 }
 
 void plotGraphGNU(double *temposMedios, double *tamanhos, int testes, double a, double b, double c, int j)

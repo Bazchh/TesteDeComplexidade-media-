@@ -29,23 +29,21 @@ void primeiroGrau(double *a_e_b, double *y, double *x, int qntPontos, double tax
     double dA, dB, r;
     int count = 0;
     double theta = 1e-8;
-    while ((fabs(erro - erroa) / erro) > 0.0001)
+    while ((fabs(erro - erroa) / erro) > 0.01)
     {
         erroa = erro;
-        erro = 0;
         for (int i = 0; i < qntPontos; i++)
         {
-            erro += pow(y[i] - func(a_e_b[1], a_e_b[1], x[i]), 2);
+            erro += pow(y[i] - func(a_e_b[0], a_e_b[1], x[i]), 2)/ qntPontos;
         }
-        erro /= qntPontos;
         r = sqrt(erro);
         dA = dB = 0.0;
 
         for (int i = 0; i < qntPontos; i++)
         {
 
-            dA += (taxaDeAprendizado * ((y[i] - func(a_e_b[0], a_e_b[1], x[i])) * DfuncA(a_e_b[0], a_e_b[1], x[i]))) / (theta + r);
-            dB += (taxaDeAprendizado * ((y[i] - func(a_e_b[0], a_e_b[1], x[i])) * DfuncB(a_e_b[0], a_e_b[1], x[i]))) / (theta + r);
+            dA += taxaDeAprendizado * (((y[i] - func(a_e_b[0], a_e_b[1], x[i])) * DfuncA(a_e_b[0], a_e_b[1], x[i]))) / (theta + r);
+            dB += taxaDeAprendizado * (((y[i] - func(a_e_b[0], a_e_b[1], x[i])) * DfuncB(a_e_b[0], a_e_b[1], x[i]))) / (theta + r);
         }
         a_e_b[0] -= dA;
         a_e_b[1] -= dB;
